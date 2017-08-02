@@ -1,5 +1,8 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
+
 
 // These values are from the DCT slides page 2
 #define ROOT_VAL 	(1.0 / sqrt(2.0))
@@ -64,7 +67,7 @@ void printArray(){
 		int v;
 		for (v = 0; v < 8; v++)
 		{
-			printf("%i", X[u][v]);
+			printf("%-4i", X[u][v]);
 			printf("%s", " ");
 		}
 		printf("\n");
@@ -73,6 +76,8 @@ void printArray(){
 
 int main(int argc, char const *argv[])
 {
+	clock_t begin = clock();
+
 	// NOTE: 8's are hard-coded. Could be changed depending on need
 	int u;
 	for (u = 0; u < 8; u++)
@@ -83,6 +88,11 @@ int main(int argc, char const *argv[])
 			X[u][v] = calcDCT(u, v);
 		}
 	}
+	// print runtime of program
+	clock_t end = clock();
+	double timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("%s%f%c\n", "Program runtime: ", timeSpent, 's');
+	// print whole output array
 	printArray();
 	return 0;
 }
