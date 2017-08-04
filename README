@@ -6,6 +6,9 @@ Basic Implementation
 2. 
 Loeffler Implementation or Arai DCT Implementation 
 
+Fast DCT Algorithms for EEG Data Compression in Embedded Systems - Scientific Figure on ResearchGate. Available from: https://www.researchgate.net/273496662_fig1_Fig-1-Signal-graph-of-the-Chen-DCT-transform-5 [accessed 2 Aug, 2017]
+
+
 3. 
 Optimized Fast DCT
 
@@ -13,3 +16,4 @@ Optimized Fast DCT
 Inline Implementation (optimized assembly)
 
 password: CLE-A127
+
