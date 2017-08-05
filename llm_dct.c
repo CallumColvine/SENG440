@@ -56,14 +56,22 @@ void llm_dct(const double in[8], double out[8]) {
   const double s4_7 =  s3_7 + s3_4;
 
   // Shuffle and scaling:
-  out[0] = s3_0 / sqrt(8.);
-  out[4] = s3_1 / sqrt(8.);
-  out[2] = s3_2 / sqrt(8.);
-  out[6] = s3_3 / sqrt(8.);
-  out[7] = s4_4 / sqrt(8.);
-  out[3] = s4_5 / sqrt(8.);  // Alternative: s3_5 / 2
-  out[5] = s4_6 / sqrt(8.);
-  out[1] = s4_7 / sqrt(8.);
+  // out[0] = s3_0 / sqrt(8.);
+  // out[4] = s3_1 / sqrt(8.);
+  // out[2] = s3_2 / sqrt(8.);
+  // out[6] = s3_3 / sqrt(8.);
+  // out[7] = s4_4 / sqrt(8.);
+  // out[3] = s4_5 / sqrt(8.);  // Alternative: s3_5 / 2
+  // out[5] = s4_6 / sqrt(8.);
+  // out[1] = s4_7 / sqrt(8.);
+  out[0] = s3_0;
+  out[4] = s3_1;
+  out[2] = s3_2;
+  out[6] = s3_3;
+  out[7] = s4_4;
+  out[3] = s4_5;  // Alternative: s3_5 / 2
+  out[5] = s4_6;
+  out[1] = s4_7;
 }
 
 int main(int argc, char const *argv[])

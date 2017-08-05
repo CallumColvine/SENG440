@@ -85,19 +85,30 @@ void stage2(int i){
 	// 		  x[i][6] * 5 * sin((1 * M_PI) / 16);
 	// x[i][6] = x[i][6] * 6 * cos((1 * M_PI) / 16) -
 	// 		  x[i][5] * 6 * sin((1 * M_PI) / 16);
-	temp = x4;
-	x4 = x4 * 4 * cos((3 * M_PI) / 16) +
-		 x7 * 4 * sin((3 * M_PI) / 16);
-	// Out1
-	x7 = x7 * 7 * cos((3 * M_PI) / 16) -
-		 temp * 7 * sin((3 * M_PI) / 16);
+	// ----- With constants -----
+	// temp = x4;
+	// x4 = x4 * 4 * cos((3 * M_PI) / 16) +
+	// 	 x7 * 4 * sin((3 * M_PI) / 16);
+	// // Out1
+	// x7 = x7 * 7 * cos((3 * M_PI) / 16) -
+	// 	 temp * 7 * sin((3 * M_PI) / 16);
+
+	// temp = x5;
+	// x5 = x5 * 5 * cos((1 * M_PI) / 16) +
+	// 	 x6 * 5 * sin((1 * M_PI) / 16);
+	// x6 = x6 * 6 * cos((1 * M_PI) / 16) -
+	//      temp * 6 * sin((1 * M_PI) / 16);
+	// ----- Without constants -----
+	x4 = x4 * cos((3 * M_PI) / 16) +
+		 x7 * sin((3 * M_PI) / 16);
+	x7 = x7 * cos((3 * M_PI) / 16) -
+		 temp * sin((3 * M_PI) / 16);
 
 	temp = x5;
-	x5 = x5 * 5 * cos((1 * M_PI) / 16) +
-		 x6 * 5 * sin((1 * M_PI) / 16);
-	x6 = x6 * 6 * cos((1 * M_PI) / 16) -
-	     temp * 6 * sin((1 * M_PI) / 16);
-
+	x5 = x5 * cos((1 * M_PI) / 16) +
+		 x6 * sin((1 * M_PI) / 16);
+	x6 = x6 * cos((1 * M_PI) / 16) -
+	     temp * sin((1 * M_PI) / 16);
 }
 
 void stage3(int i){
@@ -112,11 +123,19 @@ void stage3(int i){
 	// 		  x[i][3] * 2 * sin((1 * M_PI) / 16);
 	// x[i][3] = x[i][3] * 3 * cos((1 * M_PI) / 16) -
 	// 		  x[i][2] * 3 * sin((1 * M_PI) / 16);
-	temp = x2;
-	x2 = x2 * 2 * cos((1 * M_PI) / 16) +
-		 x3 * 2 * sin((1 * M_PI) / 16);
-	x3 = x3 * 3 * cos((1 * M_PI) / 16) -
-		 temp * 3 * sin((1 * M_PI) / 16);
+	// ----- With constants -----
+	// temp = x2;
+	// x2 = x2 * 2 * cos((1 * M_PI) / 16) +
+	// 	 x3 * 2 * sin((1 * M_PI) / 16);
+	// x3 = x3 * 3 * cos((1 * M_PI) / 16) -
+	// 	 temp * 3 * sin((1 * M_PI) / 16);
+	// ----- Without constants -----
+ 	temp = x2;
+	x2 = x2 * cos((6. * M_PI) / 16.) +
+		 x3 * sin((6. * M_PI) / 16.);
+	x3 = x3 * cos((6. * M_PI) / 16.) -
+		 temp * sin((6. * M_PI) / 16.);
+
 	// Bottom butterfly
 	// x[i][4] += x[i][6];
 	// x[i][6] -= x[i][4];
@@ -136,9 +155,17 @@ void stage4(int i){
 	// Bottom butterfly
 	// x[i][7] += x[i][4];
 	// x[i][4] -= x[i][7];
+
 	temp = x7;
 	x7 += x4;
-	x4 = temp + x4;
+	x4 = temp - x4;
+
+	// temp = x4;
+	// x4 += x7;
+	// x7 = temp - x7;
+
+	x3 = x3 * sqrt(2.);
+	x5 = x5 * sqrt(2.);
 	// Assign values
 	// X[i][0] = x[i][0] * 1/sqrt(8);
 	// X[i][1] = x[i][7] * 1/sqrt(8);
@@ -148,14 +175,22 @@ void stage4(int i){
 	// X[i][5] = x[i][6] * 1/sqrt(8); 	// May need scaling too
 	// X[i][6] = x[i][3] * 1/sqrt(8);
 	// X[i][7] = x[i][4] * 1/sqrt(8);
-	X[i][0] = x0 / sqrt(8.);
-	X[i][1] = x1 / sqrt(8.);
-	X[i][2] = x2 / sqrt(8.);
-	X[i][3] = x3 / sqrt(8.); 	// May need scaling? What's the O?
-	X[i][4] = x4 / sqrt(8.);
-	X[i][5] = x5 / sqrt(8.); 	// May need scaling too
-	X[i][6] = x6 / sqrt(8.);
-	X[i][7] = x7 / sqrt(8.);
+	// X[i][0] = x0 / sqrt(8.);
+	// X[i][1] = x1 / sqrt(8.);
+	// X[i][2] = x2 / sqrt(8.);
+	// X[i][3] = x3 / sqrt(8.); 	// May need scaling? What's the O?
+	// X[i][4] = x4 / sqrt(8.);
+	// X[i][5] = x5 / sqrt(8.); 	// May need scaling too
+	// X[i][6] = x6 / sqrt(8.);
+	// X[i][7] = x7 / sqrt(8.);
+	X[i][0] = x0;
+	X[i][1] = x4;
+	X[i][2] = x2;
+	X[i][3] = x6; 	// May need scaling? What's the O?
+	X[i][4] = x7;
+	X[i][5] = x3; 	// May need scaling too
+	X[i][6] = x5;
+	X[i][7] = x1;
 
 }
 
