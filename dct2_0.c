@@ -1,3 +1,5 @@
+// Naive implementation of DCT2
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>

@@ -13,6 +13,8 @@ all: dct2_0_build
 dct2_0_build: $(OBJS)
 	gcc -g -std=c99 -o dct2_0 dct2_0.c $(LDFLAGS)
 
+dct2_1_build: dct2_1.o
+	gcc -g -std=c99 -o dct2_1 dct2_1.c $(LDFLAGS)
 
 clean:
 	rm -rf $(OBJS) dct2
