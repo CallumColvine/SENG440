@@ -92,15 +92,12 @@ void stage3R(int i){
 	x3 = (sqrt(2.0) * x3 * cos6) -
 		 (sqrt(2.0) * temp * sin6);
 	// Bottom butterfly
-
-	printf("%s%f\n", "x6 before ", x6);
 	temp = x4;
 	x4 += x6;
 	x6 = temp - x6;
 	temp = x7;
 	x7 += x5;
 	x5 = temp - x5;
- 	printf("%s%f\n", "x6 after ", x6);
 }
 
 void stage4R(int i){
@@ -152,10 +149,8 @@ void stage2C(int i){
 	temp = x5;
 	x5 = (x5 * cos1) +
 		 (x6 * sin1);
-	printf("%s%f\n", "x6 before ", x6);
 	x6 = (x6 * cos1) -
 	     (temp * sin1);
- 	printf("%s%f\n", "x6 after ", x6);
 }
 
 void stage3C(int i){
