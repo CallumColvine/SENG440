@@ -5,7 +5,7 @@
 #include <time.h>
 
 // These values are from the DCT slides page 2
-#define ROOT_VAL 	(1.0 / sqrt(2.0))
+#define ROOT_VAL 	(1.0 / ROOT2)
 #define ARRAY_SIZE 	8
 
 #define M_PI 3.14159265358979323846264338327
@@ -42,13 +42,15 @@ int expectedOut[ARRAY_SIZE][ARRAY_SIZE] = {
 double x0, x1, x2, x3, x4, x5, x6, x7, z1, temp;
 //double COS3, SIN3, COS1, SIN1, COS6, SIN6;
 
-#define COS3 (cos((3. * M_PI) / 16.))
-#define SIN3 (sin((3. * M_PI) / 16.))
-#define	COS1 (cos((1. * M_PI) / 16.))
-#define	SIN1 (sin((1. * M_PI) / 16.))
-#define	COS6 (cos((6. * M_PI) / 16.))
-#define SIN6 (sin((6. * M_PI) / 16.))
+#define COS3 0.83146961 //(cos((3. * M_PI) / 16.))
+#define SIN3 0.55557023 //(sin((3. * M_PI) / 16.))
+#define	COS1 0.98078528 //(cos((1. * M_PI) / 16.))
+#define	SIN1 0.19509032 //(sin((1. * M_PI) / 16.))
+#define	COS6 0.38268343 //(cos((6. * M_PI) / 16.))
+#define SIN6 0.92387953 //(sin((6. * M_PI) / 16.))
 
+#define ROOT2 1.4142136 //(sqrt(2.0))
+#define INVROOT8 0.35355339 //(sqrt(8.0))
 
 void stage1R(int i){
 	// Just butterfly
@@ -95,10 +97,10 @@ void stage3R(int i){
 	x1 = temp - x1;
 	// Top rotator
   	temp = x2;
-	x2 = (sqrt(2.0) * x2 * COS6) +
-		 (sqrt(2.0) * x3 * SIN6);
-	x3 = (sqrt(2.0) * x3 * COS6) -
-		 (sqrt(2.0) * temp * SIN6);
+	x2 = (ROOT2 * x2 * COS6) +
+		 (ROOT2 * x3 * SIN6);
+	x3 = (ROOT2 * x3 * COS6) -
+		 (ROOT2 * temp * SIN6);
 	// Bottom butterfly
 	temp = x4;
 	x4 += x6;
@@ -113,17 +115,17 @@ void stage4R(int i){
 	temp = x7;
 	x7 += x4;
 	x4 = temp - x4;
-	x6 = x6 * sqrt(2.);
-	x5 = x5 * sqrt(2.);
+	x6 = x6 * ROOT2;
+	x5 = x5 * ROOT2;
 	// Assign values
-	x[i][0] = x0 / sqrt(8.);
-	x[i][1] = x7 / sqrt(8.);
-	x[i][2] = x2 / sqrt(8.);
-	x[i][3] = x5 / sqrt(8.); 	// May need scaling? What's the O?
-	x[i][4] = x1 / sqrt(8.);
-	x[i][5] = x6 / sqrt(8.); 	// May need scaling too
-	x[i][6] = x3 / sqrt(8.);
-	x[i][7] = x4 / sqrt(8.);
+	x[i][0] = x0 * INVROOT8;
+	x[i][1] = x7 * INVROOT8;
+	x[i][2] = x2 * INVROOT8;
+	x[i][3] = x5 * INVROOT8; 	// May need scaling? What's the O?
+	x[i][4] = x1 * INVROOT8;
+	x[i][5] = x6 * INVROOT8; 	// May need scaling too
+	x[i][6] = x3 * INVROOT8;
+	x[i][7] = x4 * INVROOT8;
 }
 
 // Now do columns
@@ -169,10 +171,10 @@ void stage3C(int i){
 	// Top rotator
 	// ----- Without constants -----
  	temp = x2;
-	x2 = (sqrt(2.0) * x2 * COS6) +
-		 (sqrt(2.0) * x3 * SIN6);
-	x3 = (sqrt(2.0) * x3 * COS6) -
-		 (sqrt(2.0) * temp * SIN6);
+	x2 = (ROOT2 * x2 * COS6) +
+		 (ROOT2 * x3 * SIN6);
+	x3 = (ROOT2 * x3 * COS6) -
+		 (ROOT2 * temp * SIN6);
 	// Bottom butterfly
 	temp = x4;
 	x4 += x6;
@@ -189,17 +191,17 @@ void stage4C(int i){
 	x7 += x4;
 	x4 = temp - x4;
 
-	x3 = x3 * sqrt(2.);
-	x5 = x5 * sqrt(2.);
+	x3 = x3 * ROOT2;
+	x5 = x5 * ROOT2;
 	// Assign values
-	X[0][i] = x0 / sqrt(8.);
-	X[1][i] = x7 / sqrt(8.);
-	X[2][i] = x2 / sqrt(8.);
-	X[3][i] = x5 / sqrt(8.); 	// May need scaling? What's the O?
-	X[4][i] = x1 / sqrt(8.);
-	X[5][i] = x6 / sqrt(8.); 	// May need scaling too
-	X[6][i] = x3 / sqrt(8.);
-	X[7][i] = x4 / sqrt(8.);
+	X[0][i] = x0 * INVROOT8;
+	X[1][i] = x7 * INVROOT8;
+	X[2][i] = x2 * INVROOT8;
+	X[3][i] = x5 * INVROOT8; 	// May need scaling? What's the O?
+	X[4][i] = x1 * INVROOT8;
+	X[5][i] = x6 * INVROOT8; 	// May need scaling too
+	X[6][i] = x3 * INVROOT8;
+	X[7][i] = x4 * INVROOT8;
 }
 
 
