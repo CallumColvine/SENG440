@@ -88,14 +88,14 @@ void stage3R(int i){
 	x1 = temp - x1;
 	// Top rotator
   	temp = x2;
-	// x2 = (sqrt(2.0) * x2 * cos6) +
-	// 	 (sqrt(2.0) * x3 * sin6);
-	// x3 = (sqrt(2.0) * x3 * cos6) -
-	// 	 (sqrt(2.0) * temp * sin6);
- 	x2 = (x2 * cos6) +
-		 (x3 * sin6);
-	x3 = (x3 * cos6) -
-		 (temp * sin6);
+	x2 = (sqrt(2.0) * x2 * cos6) +
+		 (sqrt(2.0) * x3 * sin6);
+	x3 = (sqrt(2.0) * x3 * cos6) -
+		 (sqrt(2.0) * temp * sin6);
+ // 	x2 = (x2 * cos6) +
+	// 	 (x3 * sin6);
+	// x3 = (x3 * cos6) -
+	// 	 (temp * sin6);
 	// Bottom butterfly
 	temp = x4;
 	x4 += x6;
@@ -119,14 +119,23 @@ void stage4R(int i){
 	x3 = x3 * sqrt(2.);
 	x5 = x5 * sqrt(2.);
 	// Assign values
-	X[i][0] = x0 / sqrt(8.);
-	X[i][1] = x7 / sqrt(8.);
-	X[i][2] = x2 / sqrt(8.);
-	X[i][3] = x5 / sqrt(8.); 	// May need scaling? What's the O?
-	X[i][4] = x1 / sqrt(8.);
-	X[i][5] = x6 / sqrt(8.); 	// May need scaling too
-	X[i][6] = x3 / sqrt(8.);
-	X[i][7] = x4 / sqrt(8.);
+	x[i][0] = x0 / sqrt(8.);
+	x[i][1] = x7 / sqrt(8.);
+	x[i][2] = x2 / sqrt(8.);
+	x[i][3] = x5 / sqrt(8.); 	// May need scaling? What's the O?
+	x[i][4] = x1 / sqrt(8.);
+	x[i][5] = x6 / sqrt(8.); 	// May need scaling too
+	x[i][6] = x3 / sqrt(8.);
+	x[i][7] = x4 / sqrt(8.);
+	// x[i][0] = x0;
+	// x[i][1] = x7;
+	// x[i][2] = x2;
+	// x[i][3] = x5; 	// May need scaling? What's the O?
+	// x[i][4] = x1;
+	// x[i][5] = x6; 	// May need scaling too
+	// x[i][6] = x3;
+	// x[i][7] = x4;
+
 }
 
 
@@ -179,14 +188,14 @@ void stage3C(int i){
 	// Top rotator
 	// ----- Without constants -----
  	temp = x2;
-	// x2 = (sqrt(2.0) * x2 * cos6) +
-	// 	 (sqrt(2.0) * x3 * sin6);
-	// x3 = (sqrt(2.0) * x3 * cos6) -
-	// 	 (sqrt(2.0) * temp * sin6);
- 	x2 = (x2 * cos6) +
-		 (x3 * sin6);
-	x3 = (x3 * cos6) -
-		 (temp * sin6);
+	x2 = (sqrt(2.0) * x2 * cos6) +
+		 (sqrt(2.0) * x3 * sin6);
+	x3 = (sqrt(2.0) * x3 * cos6) -
+		 (sqrt(2.0) * temp * sin6);
+ // 	x2 = (x2 * cos6) +
+	// 	 (x3 * sin6);
+	// x3 = (x3 * cos6) -
+	// 	 (temp * sin6);
 
 	// Bottom butterfly
 	temp = x4;
