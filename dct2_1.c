@@ -11,7 +11,7 @@
 #define M_PI 3.14159265358979323846264338327
 
 
-const float C[ARRAY_SIZE] = {ROOT_VAL, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+// const float C[ARRAY_SIZE] = {ROOT_VAL, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
 // Init array to 0's
 int X[ARRAY_SIZE][ARRAY_SIZE] = {0};
 // Init the example input values
@@ -70,11 +70,14 @@ void stage2R(int i){
 	x7 = (x7 * cos3) -
 		 (temp * sin3);
 
+
+	// printf("%s%f\n", "x6 before ", x6);
 	temp = x5;
 	x5 = (x5 * cos1) +
 		 (x6 * sin1);
 	x6 = (x6 * cos1) -
 	     (temp * sin1);
+ 	// printf("%s%f\n", "x6 after ", x6);
 }
 
 void stage3R(int i){
@@ -89,12 +92,15 @@ void stage3R(int i){
 	x3 = (sqrt(2.0) * x3 * cos6) -
 		 (sqrt(2.0) * temp * sin6);
 	// Bottom butterfly
+
+	printf("%s%f\n", "x6 before ", x6);
 	temp = x4;
 	x4 += x6;
 	x6 = temp - x6;
 	temp = x7;
 	x7 += x5;
 	x5 = temp - x5;
+ 	printf("%s%f\n", "x6 after ", x6);
 }
 
 void stage4R(int i){
@@ -102,7 +108,7 @@ void stage4R(int i){
 	temp = x7;
 	x7 += x4;
 	x4 = temp - x4;
-	x3 = x3 * sqrt(2.);
+	x6 = x6 * sqrt(2.);
 	x5 = x5 * sqrt(2.);
 	// Assign values
 	x[i][0] = x0 / sqrt(8.);
@@ -146,8 +152,10 @@ void stage2C(int i){
 	temp = x5;
 	x5 = (x5 * cos1) +
 		 (x6 * sin1);
+	printf("%s%f\n", "x6 before ", x6);
 	x6 = (x6 * cos1) -
 	     (temp * sin1);
+ 	printf("%s%f\n", "x6 after ", x6);
 }
 
 void stage3C(int i){
