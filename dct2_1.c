@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 
 // These values are from the DCT slides page 2
 #define ROOT_VAL 	(1.0 / sqrt(2.0))
@@ -63,11 +64,6 @@ void stage2R(int i){
 	x2 = temp - x2;
 	// Rotator
 	// ----- Without constants -----
-	
-	// double z1 = cos((3 * M_PI) / 16) * (x7 + x4);
-	// x4 = (sin((3 * M_PI) / 16) - cos((3 * M_PI) / 16)) * x7 + z1;
-	// x7 = (-sin((3 * M_PI) / 16) - cos((3 * M_PI) / 16)) * x4 + z1;
-	
 	temp = x4;
 	x4 = (x4 * cos3) +
 		 (x7 * sin3);
@@ -92,10 +88,6 @@ void stage3R(int i){
 		 (sqrt(2.0) * x3 * sin6);
 	x3 = (sqrt(2.0) * x3 * cos6) -
 		 (sqrt(2.0) * temp * sin6);
- // 	x2 = (x2 * cos6) +
-	// 	 (x3 * sin6);
-	// x3 = (x3 * cos6) -
-	// 	 (temp * sin6);
 	// Bottom butterfly
 	temp = x4;
 	x4 += x6;
@@ -106,16 +98,10 @@ void stage3R(int i){
 }
 
 void stage4R(int i){
-	// ToDo: what was the top step here?
 	// Bottom butterfly
-	// printf("%s%f\n", "x7 before ", x7);
 	temp = x7;
 	x7 += x4;
 	x4 = temp - x4;
-	// printf("%s%f\n", "x7 after ", x7);
-	// temp = x4;
-	// x4 += x7;
-	// x7 = temp - x7;
 	x3 = x3 * sqrt(2.);
 	x5 = x5 * sqrt(2.);
 	// Assign values
@@ -127,18 +113,9 @@ void stage4R(int i){
 	x[i][5] = x6 / sqrt(8.); 	// May need scaling too
 	x[i][6] = x3 / sqrt(8.);
 	x[i][7] = x4 / sqrt(8.);
-	// x[i][0] = x0;
-	// x[i][1] = x7;
-	// x[i][2] = x2;
-	// x[i][3] = x5; 	// May need scaling? What's the O?
-	// x[i][4] = x1;
-	// x[i][5] = x6; 	// May need scaling too
-	// x[i][6] = x3;
-	// x[i][7] = x4;
-
 }
 
-
+// Now do columns
 void stage1C(int i){
 	// Just butterfly
 	x0 = x[0][i] + x[7][i];
@@ -161,13 +138,6 @@ void stage2C(int i){
 	x2 = temp - x2;
 	// Rotator
 	// ----- Without constants -----
-	
-	// printf("%f\n", x7);
-	// Other person's equation
-	// z1 = cos3 * (x7 + x4);
-	// x4 = (sin3 - cos3) * x7 + z1;
-	// x7 = (-sin3 - cos3) * x4 + z1;
-	
 	temp = x4;
 	x4 = (x4 * cos3) +
 		 (x7 * sin3);
@@ -192,11 +162,6 @@ void stage3C(int i){
 		 (sqrt(2.0) * x3 * sin6);
 	x3 = (sqrt(2.0) * x3 * cos6) -
 		 (sqrt(2.0) * temp * sin6);
- // 	x2 = (x2 * cos6) +
-	// 	 (x3 * sin6);
-	// x3 = (x3 * cos6) -
-	// 	 (temp * sin6);
-
 	// Bottom butterfly
 	temp = x4;
 	x4 += x6;
@@ -212,9 +177,7 @@ void stage4C(int i){
 	temp = x7;
 	x7 += x4;
 	x4 = temp - x4;
-	// temp = x4;
-	// x4 += x7;
-	// x7 = temp - x7;
+
 	x3 = x3 * sqrt(2.);
 	x5 = x5 * sqrt(2.);
 	// Assign values
@@ -226,7 +189,6 @@ void stage4C(int i){
 	X[5][i] = x6 / sqrt(8.); 	// May need scaling too
 	X[6][i] = x3 / sqrt(8.);
 	X[7][i] = x4 / sqrt(8.);
-
 }
 
 
@@ -244,8 +206,11 @@ void printArray(){
 	}
 }
 
+// ToDo: Errors are in the 2nd part of the rotators
+// x6, x3, and x4
 int main(int argc, char const *argv[])
 {
+	clock_t begin = clock();
 	// Rows
 	cos3 = cos((3. * M_PI) / 16.);
 	sin3 = sin((3. * M_PI) / 16.);
@@ -257,6 +222,7 @@ int main(int argc, char const *argv[])
 	int i;
 	for (i = 0; i < 8; i++)
 	{
+		// Function calls to modify rows
 		stage1R(i);
 		stage2R(i);
 		stage3R(i);
@@ -266,11 +232,17 @@ int main(int argc, char const *argv[])
 	int j;
 	for (j = 0; j < 8; j++)
 	{
+		// Function calls to modify columns
 		stage1C(j);
 		stage2C(j);
 		stage3C(j);
 		stage4C(j);
 	}
+	// print runtime of program
+	clock_t end = clock();
+	double timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("%s%f%c\n", "Program runtime: ", timeSpent, 's');
+	// print whole output array
 	printArray();
 	return 0;
 }
