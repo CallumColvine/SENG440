@@ -42,15 +42,6 @@ double x0, x1, x2, x3, x4, x5, x6, x7, temp;
 
 void stage1(int i){
 	// Just butterfly
-	// x[i][0] += x[i][7];
-	// x[i][7] -= x[i][0];
-	// x[i][1] += x[i][6];
-	// x[i][6] -= x[i][1];
-	// x[i][2] += x[i][5];
-	// x[i][5] -= x[i][2];
-	// x[i][3] += x[i][4];
-	// x[i][4] -= x[i][3];
-
 	x0 = x[i][0] + x[i][7];
 	x7 = x[i][0] - x[i][7];
 	x1 = x[i][1] + x[i][6];
@@ -63,10 +54,6 @@ void stage1(int i){
 
 void stage2(int i){
 	// Butterfly
-	// x[i][0] += x[i][3];
-	// x[i][3] -= x[i][0];
-	// x[i][1] += x[i][2];
-	// x[i][2] -= x[i][1];
 	temp = x0;
 	x0 += x3;
 	x3 = temp - x3;
@@ -74,17 +61,6 @@ void stage2(int i){
 	x1 += x2;
 	x2 = temp - x2;
 	// Rotator
-	// Out0
-	// x[i][4] = x[i][4] * 4 * cos((3 * M_PI) / 16) +
-	// 		  x[i][7] * 4 * sin((3 * M_PI) / 16);
-	// // Out1
-	// x[i][7] = x[i][7] * 7 * cos((3 * M_PI) / 16) -
-	// 		  x[i][4] * 7 * sin((3 * M_PI) / 16);
-
-	// x[i][5] = x[i][5] * 5 * cos((1 * M_PI) / 16) +
-	// 		  x[i][6] * 5 * sin((1 * M_PI) / 16);
-	// x[i][6] = x[i][6] * 6 * cos((1 * M_PI) / 16) -
-	// 		  x[i][5] * 6 * sin((1 * M_PI) / 16);
 	// ----- With constants -----
 	// temp = x4;
 	// x4 = x4 * 4 * cos((3 * M_PI) / 16) +
@@ -99,11 +75,19 @@ void stage2(int i){
 	// x6 = x6 * 6 * cos((1 * M_PI) / 16) -
 	//      temp * 6 * sin((1 * M_PI) / 16);
 	// ----- Without constants -----
+	
+	printf("%f\n", x7);
+	// double z1 = cos((3 * M_PI) / 16) * (x7 + x4);
+	// x4 = (sin((3 * M_PI) / 16) - cos((3 * M_PI) / 16)) * x7 + z1;
+	// x7 = (-sin((3 * M_PI) / 16) - cos((3 * M_PI) / 16)) * x4 + z1;
+	
+	temp = x4;
 	x4 = x4 * cos((3 * M_PI) / 16) +
 		 x7 * sin((3 * M_PI) / 16);
 	x7 = x7 * cos((3 * M_PI) / 16) -
 		 temp * sin((3 * M_PI) / 16);
 
+	
 	temp = x5;
 	x5 = x5 * cos((1 * M_PI) / 16) +
 		 x6 * sin((1 * M_PI) / 16);
@@ -113,16 +97,10 @@ void stage2(int i){
 
 void stage3(int i){
 	// Top butterfly
-	// x[i][0] += x[i][1];
-	// x[i][1] -= x[i][0];
 	temp = x0;
 	x0 += x1;
 	x1 = temp - x1;
 	// Top rotator
-	// x[i][2] = x[i][2] * 2 * cos((1 * M_PI) / 16) +
-	// 		  x[i][3] * 2 * sin((1 * M_PI) / 16);
-	// x[i][3] = x[i][3] * 3 * cos((1 * M_PI) / 16) -
-	// 		  x[i][2] * 3 * sin((1 * M_PI) / 16);
 	// ----- With constants -----
 	// temp = x2;
 	// x2 = x2 * 2 * cos((1 * M_PI) / 16) +
@@ -131,16 +109,13 @@ void stage3(int i){
 	// 	 temp * 3 * sin((1 * M_PI) / 16);
 	// ----- Without constants -----
  	temp = x2;
-	x2 = x2 * cos((6. * M_PI) / 16.) +
-		 x3 * sin((6. * M_PI) / 16.);
-	x3 = x3 * cos((6. * M_PI) / 16.) -
-		 temp * sin((6. * M_PI) / 16.);
+	x2 = sqrt(2.0) * x2 * cos((6. * M_PI) / 16.) +
+		 sqrt(2.0) * x3 * sin((6. * M_PI) / 16.);
+	x3 = sqrt(2.0) * x3 * cos((6. * M_PI) / 16.) -
+		 sqrt(2.0) * temp * sin((6. * M_PI) / 16.);
+
 
 	// Bottom butterfly
-	// x[i][4] += x[i][6];
-	// x[i][6] -= x[i][4];
-	// x[i][7] += x[i][5];
-	// x[i][5] -= x[i][7];
 	temp = x4;
 	x4 += x6;
 	x6 = temp - x6;
@@ -148,14 +123,12 @@ void stage3(int i){
 	x7 += x5;
 	x5 = temp - x5;
 
+	
 }
 
 void stage4(int i){
 	// ToDo: what was the top step here?
 	// Bottom butterfly
-	// x[i][7] += x[i][4];
-	// x[i][4] -= x[i][7];
-
 	temp = x7;
 	x7 += x4;
 	x4 = temp - x4;
@@ -167,30 +140,24 @@ void stage4(int i){
 	x3 = x3 * sqrt(2.);
 	x5 = x5 * sqrt(2.);
 	// Assign values
-	// X[i][0] = x[i][0] * 1/sqrt(8);
-	// X[i][1] = x[i][7] * 1/sqrt(8);
-	// X[i][2] = x[i][2] * 1/sqrt(8);
-	// X[i][3] = x[i][5] * 1/sqrt(8); 	// May need scaling? What's the O?
-	// X[i][4] = x[i][1] * 1/sqrt(8);
-	// X[i][5] = x[i][6] * 1/sqrt(8); 	// May need scaling too
-	// X[i][6] = x[i][3] * 1/sqrt(8);
-	// X[i][7] = x[i][4] * 1/sqrt(8);
-	// X[i][0] = x0 / sqrt(8.);
-	// X[i][1] = x1 / sqrt(8.);
-	// X[i][2] = x2 / sqrt(8.);
-	// X[i][3] = x3 / sqrt(8.); 	// May need scaling? What's the O?
-	// X[i][4] = x4 / sqrt(8.);
-	// X[i][5] = x5 / sqrt(8.); 	// May need scaling too
-	// X[i][6] = x6 / sqrt(8.);
-	// X[i][7] = x7 / sqrt(8.);
-	X[i][0] = x0;
-	X[i][1] = x4;
-	X[i][2] = x2;
-	X[i][3] = x6; 	// May need scaling? What's the O?
-	X[i][4] = x7;
-	X[i][5] = x3; 	// May need scaling too
-	X[i][6] = x5;
-	X[i][7] = x1;
+
+
+	X[i][0] = x0 / sqrt(8.);
+	X[i][1] = x4 / sqrt(8.);
+	X[i][2] = x2 / sqrt(8.);
+	X[i][3] = x6 / sqrt(8.); 	// May need scaling? What's the O?
+	X[i][4] = x7 / sqrt(8.);
+	X[i][5] = x3 / sqrt(8.); 	// May need scaling too
+	X[i][6] = x5 / sqrt(8.);
+	X[i][7] = x1 / sqrt(8.);
+	// X[i][0] = x0;
+	// X[i][1] = x4;
+	// X[i][2] = x2;
+	// X[i][3] = x6; 	// May need scaling? What's the O?
+	// X[i][4] = x7;
+	// X[i][5] = x3; 	// May need scaling too
+	// X[i][6] = x5;
+	// X[i][7] = x1;
 
 }
 
