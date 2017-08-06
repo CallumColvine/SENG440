@@ -37,10 +37,11 @@ int expectedOut[ARRAY_SIZE][ARRAY_SIZE] = {
 };
 
 
-double x0, x1, x2, x3, x4, x5, x6, x7, temp;
+double x0, x1, x2, x3, x4, x5, x6, x7, z1, temp;
+double cos3, sin3, cos1, sin1, cos6, sin6;
 
 
-void stage1(int i){
+void stage1R(int i){
 	// Just butterfly
 	x0 = x[i][0] + x[i][7];
 	x7 = x[i][0] - x[i][7];
@@ -52,7 +53,7 @@ void stage1(int i){
 	x4 = x[i][3] - x[i][4];
 }
 
-void stage2(int i){
+void stage2R(int i){
 	// Butterfly
 	temp = x0;
 	x0 += x3;
@@ -61,59 +62,131 @@ void stage2(int i){
 	x1 += x2;
 	x2 = temp - x2;
 	// Rotator
-	// ----- With constants -----
-	// temp = x4;
-	// x4 = x4 * 4 * cos((3 * M_PI) / 16) +
-	// 	 x7 * 4 * sin((3 * M_PI) / 16);
-	// // Out1
-	// x7 = x7 * 7 * cos((3 * M_PI) / 16) -
-	// 	 temp * 7 * sin((3 * M_PI) / 16);
-
-	// temp = x5;
-	// x5 = x5 * 5 * cos((1 * M_PI) / 16) +
-	// 	 x6 * 5 * sin((1 * M_PI) / 16);
-	// x6 = x6 * 6 * cos((1 * M_PI) / 16) -
-	//      temp * 6 * sin((1 * M_PI) / 16);
 	// ----- Without constants -----
 	
-	printf("%f\n", x7);
 	// double z1 = cos((3 * M_PI) / 16) * (x7 + x4);
 	// x4 = (sin((3 * M_PI) / 16) - cos((3 * M_PI) / 16)) * x7 + z1;
 	// x7 = (-sin((3 * M_PI) / 16) - cos((3 * M_PI) / 16)) * x4 + z1;
 	
 	temp = x4;
-	x4 = x4 * cos((3 * M_PI) / 16) +
-		 x7 * sin((3 * M_PI) / 16);
-	x7 = x7 * cos((3 * M_PI) / 16) -
-		 temp * sin((3 * M_PI) / 16);
+	x4 = (x4 * cos3) +
+		 (x7 * sin3);
+	x7 = (x7 * cos3) -
+		 (temp * sin3);
 
-	
 	temp = x5;
-	x5 = x5 * cos((1 * M_PI) / 16) +
-		 x6 * sin((1 * M_PI) / 16);
-	x6 = x6 * cos((1 * M_PI) / 16) -
-	     temp * sin((1 * M_PI) / 16);
+	x5 = (x5 * cos1) +
+		 (x6 * sin1);
+	x6 = (x6 * cos1) -
+	     (temp * sin1);
 }
 
-void stage3(int i){
+void stage3R(int i){
 	// Top butterfly
 	temp = x0;
 	x0 += x1;
 	x1 = temp - x1;
 	// Top rotator
-	// ----- With constants -----
-	// temp = x2;
-	// x2 = x2 * 2 * cos((1 * M_PI) / 16) +
-	// 	 x3 * 2 * sin((1 * M_PI) / 16);
-	// x3 = x3 * 3 * cos((1 * M_PI) / 16) -
-	// 	 temp * 3 * sin((1 * M_PI) / 16);
+  	temp = x2;
+	// x2 = (sqrt(2.0) * x2 * cos6) +
+	// 	 (sqrt(2.0) * x3 * sin6);
+	// x3 = (sqrt(2.0) * x3 * cos6) -
+	// 	 (sqrt(2.0) * temp * sin6);
+ 	x2 = (x2 * cos6) +
+		 (x3 * sin6);
+	x3 = (x3 * cos6) -
+		 (temp * sin6);
+	// Bottom butterfly
+	temp = x4;
+	x4 += x6;
+	x6 = temp - x6;
+	temp = x7;
+	x7 += x5;
+	x5 = temp - x5;
+}
+
+void stage4R(int i){
+	// ToDo: what was the top step here?
+	// Bottom butterfly
+	// printf("%s%f\n", "x7 before ", x7);
+	temp = x7;
+	x7 += x4;
+	x4 = temp - x4;
+	// printf("%s%f\n", "x7 after ", x7);
+	// temp = x4;
+	// x4 += x7;
+	// x7 = temp - x7;
+	x3 = x3 * sqrt(2.);
+	x5 = x5 * sqrt(2.);
+	// Assign values
+	X[i][0] = x0 / sqrt(8.);
+	X[i][1] = x7 / sqrt(8.);
+	X[i][2] = x2 / sqrt(8.);
+	X[i][3] = x5 / sqrt(8.); 	// May need scaling? What's the O?
+	X[i][4] = x1 / sqrt(8.);
+	X[i][5] = x6 / sqrt(8.); 	// May need scaling too
+	X[i][6] = x3 / sqrt(8.);
+	X[i][7] = x4 / sqrt(8.);
+}
+
+
+void stage1C(int i){
+	// Just butterfly
+	x0 = x[0][i] + x[7][i];
+	x7 = x[0][i] - x[7][i];
+	x1 = x[1][i] + x[6][i];
+	x6 = x[1][i] - x[6][i];
+	x2 = x[2][i] + x[5][i];
+	x5 = x[2][i] - x[5][i];
+	x3 = x[3][i] + x[4][i];
+	x4 = x[3][i] - x[4][i];
+}
+
+void stage2C(int i){
+	// Butterfly
+	temp = x0;
+	x0 += x3;
+	x3 = temp - x3;
+	temp = x1;
+	x1 += x2;
+	x2 = temp - x2;
+	// Rotator
+	// ----- Without constants -----
+	
+	// printf("%f\n", x7);
+	// Other person's equation
+	// z1 = cos3 * (x7 + x4);
+	// x4 = (sin3 - cos3) * x7 + z1;
+	// x7 = (-sin3 - cos3) * x4 + z1;
+	
+	temp = x4;
+	x4 = (x4 * cos3) +
+		 (x7 * sin3);
+	x7 = (x7 * cos3) -
+		 (temp * sin3);
+	temp = x5;
+	x5 = (x5 * cos1) +
+		 (x6 * sin1);
+	x6 = (x6 * cos1) -
+	     (temp * sin1);
+}
+
+void stage3C(int i){
+	// Top butterfly
+	temp = x0;
+	x0 += x1;
+	x1 = temp - x1;
+	// Top rotator
 	// ----- Without constants -----
  	temp = x2;
-	x2 = sqrt(2.0) * x2 * cos((6. * M_PI) / 16.) +
-		 sqrt(2.0) * x3 * sin((6. * M_PI) / 16.);
-	x3 = sqrt(2.0) * x3 * cos((6. * M_PI) / 16.) -
-		 sqrt(2.0) * temp * sin((6. * M_PI) / 16.);
-
+	// x2 = (sqrt(2.0) * x2 * cos6) +
+	// 	 (sqrt(2.0) * x3 * sin6);
+	// x3 = (sqrt(2.0) * x3 * cos6) -
+	// 	 (sqrt(2.0) * temp * sin6);
+ 	x2 = (x2 * cos6) +
+		 (x3 * sin6);
+	x3 = (x3 * cos6) -
+		 (temp * sin6);
 
 	// Bottom butterfly
 	temp = x4;
@@ -122,44 +195,31 @@ void stage3(int i){
 	temp = x7;
 	x7 += x5;
 	x5 = temp - x5;
-
-	
 }
 
-void stage4(int i){
+void stage4C(int i){
 	// ToDo: what was the top step here?
 	// Bottom butterfly
 	temp = x7;
 	x7 += x4;
 	x4 = temp - x4;
-
 	// temp = x4;
 	// x4 += x7;
 	// x7 = temp - x7;
-
 	x3 = x3 * sqrt(2.);
 	x5 = x5 * sqrt(2.);
 	// Assign values
-
-
-	X[i][0] = x0 / sqrt(8.);
-	X[i][1] = x4 / sqrt(8.);
-	X[i][2] = x2 / sqrt(8.);
-	X[i][3] = x6 / sqrt(8.); 	// May need scaling? What's the O?
-	X[i][4] = x7 / sqrt(8.);
-	X[i][5] = x3 / sqrt(8.); 	// May need scaling too
-	X[i][6] = x5 / sqrt(8.);
-	X[i][7] = x1 / sqrt(8.);
-	// X[i][0] = x0;
-	// X[i][1] = x4;
-	// X[i][2] = x2;
-	// X[i][3] = x6; 	// May need scaling? What's the O?
-	// X[i][4] = x7;
-	// X[i][5] = x3; 	// May need scaling too
-	// X[i][6] = x5;
-	// X[i][7] = x1;
+	X[0][i] = x0 / sqrt(8.);
+	X[1][i] = x7 / sqrt(8.);
+	X[2][i] = x2 / sqrt(8.);
+	X[3][i] = x5 / sqrt(8.); 	// May need scaling? What's the O?
+	X[4][i] = x1 / sqrt(8.);
+	X[5][i] = x6 / sqrt(8.); 	// May need scaling too
+	X[6][i] = x3 / sqrt(8.);
+	X[7][i] = x4 / sqrt(8.);
 
 }
+
 
 void printArray(){
 	int u;
@@ -177,13 +237,30 @@ void printArray(){
 
 int main(int argc, char const *argv[])
 {
+	// Rows
+	cos3 = cos((3. * M_PI) / 16.);
+	sin3 = sin((3. * M_PI) / 16.);
+	cos1 = cos((1. * M_PI) / 16.);
+	sin1 = sin((1. * M_PI) / 16.);
+	cos6 = cos((6. * M_PI) / 16.);
+	sin6 = sin((6. * M_PI) / 16.);
+
 	int i;
 	for (i = 0; i < 8; i++)
 	{
-		stage1(i);
-		stage2(i);
-		stage3(i);
-		stage4(i);
+		stage1R(i);
+		stage2R(i);
+		stage3R(i);
+		stage4R(i);
+	}
+	// Columns
+	int j;
+	for (j = 0; j < 8; j++)
+	{
+		stage1C(j);
+		stage2C(j);
+		stage3C(j);
+		stage4C(j);
 	}
 	printArray();
 	return 0;
