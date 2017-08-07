@@ -15,7 +15,7 @@
 // Init array to 0's
 int X[ARRAY_SIZE][ARRAY_SIZE] = {0};
 // Init the example input values
-int x[ARRAY_SIZE][ARRAY_SIZE] = {
+double x[ARRAY_SIZE][ARRAY_SIZE] = {
 	{75, 76, 75, 75, 69, 66, 77, 71},
 	{73, 74, 73, 74, 63, 64, 68, 69},
 	{69, 68, 71, 72, 67, 58, 48, 41},
@@ -108,14 +108,14 @@ void stage4R(int i){
 	x6 = x6 * sqrt(2.);
 	x5 = x5 * sqrt(2.);
 	// Assign values
-	x[i][0] = x0 / sqrt(8.);
-	x[i][1] = x7 / sqrt(8.);
-	x[i][2] = x2 / sqrt(8.);
-	x[i][3] = x5 / sqrt(8.); 	// May need scaling? What's the O?
-	x[i][4] = x1 / sqrt(8.);
-	x[i][5] = x6 / sqrt(8.); 	// May need scaling too
-	x[i][6] = x3 / sqrt(8.);
-	x[i][7] = x4 / sqrt(8.);
+	x[i][0] = (x0 / sqrt(8.));
+	x[i][1] = (x7 / sqrt(8.));
+	x[i][2] = (x2 / sqrt(8.));
+	x[i][3] = (x5 / sqrt(8.)); 	// May need scaling? What's the O?
+	x[i][4] = (x1 / sqrt(8.));
+	x[i][5] = (x6 / sqrt(8.)); 	// May need scaling too
+	x[i][6] = (x3 / sqrt(8.));
+	x[i][7] = (x4 / sqrt(8.));
 }
 
 // Now do columns
@@ -181,17 +181,26 @@ void stage4C(int i){
 	x7 += x4;
 	x4 = temp - x4;
 
-	x3 = x3 * sqrt(2.);
+	x6 = x6 * sqrt(2.);
 	x5 = x5 * sqrt(2.);
 	// Assign values
-	X[0][i] = x0 / sqrt(8.);
-	X[1][i] = x7 / sqrt(8.);
-	X[2][i] = x2 / sqrt(8.);
-	X[3][i] = x5 / sqrt(8.); 	// May need scaling? What's the O?
-	X[4][i] = x1 / sqrt(8.);
-	X[5][i] = x6 / sqrt(8.); 	// May need scaling too
-	X[6][i] = x3 / sqrt(8.);
-	X[7][i] = x4 / sqrt(8.);
+	// X[0][i] = (x0 / sqrt(8.)) + 0.5;
+	// X[1][i] = (x7 / sqrt(8.)) + 0.5;
+	// X[2][i] = (x2 / sqrt(8.)) + 0.5;
+	// X[3][i] = (x5 / sqrt(8.)) + 0.5; 	// May need scaling? What's the O?
+	// X[4][i] = (x1 / sqrt(8.)) + 0.5;
+	// X[5][i] = (x6 / sqrt(8.)) + 0.5; 	// May need scaling too
+	// X[6][i] = (x3 / sqrt(8.)) + 0.5;
+	// X[7][i] = (x4 / sqrt(8.)) + 0.5;
+	X[0][i] = round(x0 / sqrt(8.));
+	X[1][i] = round(x7 / sqrt(8.));
+	X[2][i] = round(x2 / sqrt(8.));
+	X[3][i] = round(x5 / sqrt(8.)); 	// May need scaling? What's the O?
+	X[4][i] = round(x1 / sqrt(8.));
+	X[5][i] = round(x6 / sqrt(8.)); 	// May need scaling too
+	X[6][i] = round(x3 / sqrt(8.));
+	X[7][i] = round(x4 / sqrt(8.));
+
 }
 
 

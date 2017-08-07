@@ -5,7 +5,7 @@ LDFLAGS = -lm
 
 OBJS = dct2_0.o
 
-all: dct2_0_build
+all: dct2_0_build dct2_1_build
 
 # dct2_0_build: $(OBJS)
 # 	$(CXX) $(CXXFLAGS) -o dct2_0 dct2_0.c $(LDFLAGS)
