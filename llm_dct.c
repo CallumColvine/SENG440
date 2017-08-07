@@ -1,4 +1,4 @@
-// https://unix4lyfe.org/dct-1d/
+  // https://unix4lyfe.org/dct-1d/
 #include <math.h>
 #include <stdio.h>
 
