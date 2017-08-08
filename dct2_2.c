@@ -111,12 +111,11 @@ void dct(int X[ARRAY_SIZE][ARRAY_SIZE], int x[ARRAY_SIZE][ARRAY_SIZE])
 		tmp5 = (tmp5 * ROOT2) >> 7 ;
 	*/
 
-	// Bottom butterfly
+		//Rows: Bottom Stages Combined
 		tmp7 = (x4 * (COS3 - SIN3)) + (x5 * (COS1 - SIN1)) + (x6 * (SIN1 + COS1)) + (x7 * (SIN3 + COS3)) >> 10;
-		//tmp7 = ((x4 * COS3) - (x4 * SIN3) + (x5 * COS1) - (x5 * SIN1) + (x6 * SIN1) + (x6 * COS1) + (x7 * SIN3) + (x7 * COS3)) >> 10;
 		tmp4 = ((x7 * COS3) - (x4 * SIN3) - (x4 * COS3) + (x5 * (COS1 + SIN1)) + (x6 * SIN1) - (x6 * COS1) - (x7 * SIN3)) >> 10;
+		//tmp7 = ((x4 * COS3) - (x4 * SIN3) + (x5 * COS1) - (x5 * SIN1) + (x6 * SIN1) + (x6 * COS1) + (x7 * SIN3) + (x7 * COS3)) >> 10;
 		//tmp4 = ((x4 * SIN3) + (x4 * COS3) + (x5 * COS1) + (x5 * SIN1) + (x6 * SIN1) - (x6 * COS1) - (x7 * SIN3) + (x7 * COS3)) >> 10;
-		// Scaling
 		tmp5 = (((x7 * COS3) - (x4 * SIN3) - (x5 * COS1) - (x6 * SIN1)) * ROOT2) >> 17;
 		tmp6 = (((x4 * COS3) + (x7 * SIN3) - (x6 * COS1) + (x5 * SIN1)) * ROOT2) >> 17;
 
@@ -186,7 +185,7 @@ void dct(int X[ARRAY_SIZE][ARRAY_SIZE], int x[ARRAY_SIZE][ARRAY_SIZE])
 		x2 = (ROOT2 * (x2 * COS6) + (x3 * SIN6)) >> 17;
 		x3 = (ROOT2 * (x3 * COS6) - (temp * SIN6)) >> 17;
 
-
+/*
 		//Columns: Bottom Stage 2
 		//temp = x4;
 		tmp4 = ((x4 * COS3) + (x7 * SIN3)) >> 10;
@@ -213,18 +212,12 @@ void dct(int X[ARRAY_SIZE][ARRAY_SIZE], int x[ARRAY_SIZE][ARRAY_SIZE])
 		tmp5 = (tmp5 * ROOT2) >> 7;
 		tmp6 = (tmp6 * ROOT2) >> 7;
 
-		//Columns: Bottom Stage 2
-
-		//Columns: Bottom Stage 3
-		// Bottom butterfly
-	
-		//Columns: Bottom Stage 4 
-		// Bottom butterfly
+*/	
+		//Columns: Bottom Stages Combined
 		tmp7 = (x4 * (COS3 - SIN3)) + (x5 * (COS1 - SIN1)) + (x6 * (SIN1 + COS1)) + (x7 * (SIN3 + COS3)) >> 10;
-		//tmp7 = ((x4 * COS3) - (x4 * SIN3) + (x5 * COS1) - (x5 * SIN1) + (x6 * SIN1) + (x6 * COS1) + (x7 * SIN3) + (x7 * COS3)) >> 10;
 		tmp4 = ((x7 * COS3) - (x4 * SIN3) - (x4 * COS3) + (x5 * (COS1 + SIN1)) + (x6 * SIN1) - (x6 * COS1) - (x7 * SIN3)) >> 10;
+		//tmp7 = ((x4 * COS3) - (x4 * SIN3) + (x5 * COS1) - (x5 * SIN1) + (x6 * SIN1) + (x6 * COS1) + (x7 * SIN3) + (x7 * COS3)) >> 10;
 		//tmp4 = ((x4 * SIN3) + (x4 * COS3) + (x5 * COS1) + (x5 * SIN1) + (x6 * SIN1) - (x6 * COS1) - (x7 * SIN3) + (x7 * COS3)) >> 10;
-		// Scaling
 		tmp5 = (((x7 * COS3) - (x4 * SIN3) - (x5 * COS1) - (x6 * SIN1)) * ROOT2) >> 17;
 		tmp6 = (((x4 * COS3) + (x7 * SIN3) - (x6 * COS1) + (x5 * SIN1)) * ROOT2) >> 17;
 
